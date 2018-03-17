@@ -8,7 +8,7 @@ from getch import getch
 from random import choice
 
 
-class KidsGame:
+class LetterGame:
     def __init__(self):
         self.alphabet = [
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
@@ -19,24 +19,27 @@ class KidsGame:
     def attempt(self, letter):
         while True:
             entry = getch().lower()
-            if ord(entry) == 27:
+            if ord(entry) is 27:
                 return False
-            if entry == letter:
+            elif entry == letter:
                 print('Yay!')
                 return True
-            elif entry in self.alphabet:
-                continue
 
-    def loop(self):
+    def challenge(self):
+        if sorted(self.used) == sorted(self.alphabet):
+            self.used = []
+        letter = choice(list(set(self.alphabet).difference(set(self.used))))
+        self.used.append(letter)
+        print(letter.upper())
+        return letter
+
+    def play(self):
         while True:
-            if sorted(self.used) == sorted(self.alphabet):
-                self.used = []
-            letter = choice(list(set(self.alphabet).difference(set(self.used))))
-            self.used.append(letter)
-            print(letter.upper())
+            letter = self.challenge()
+            yield letter
             if not self.attempt(letter):
                 break
 
 
 if __name__ == '__main__':
-    KidsGame().loop()
+    LetterGame().play()
